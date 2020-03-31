@@ -6,13 +6,26 @@
   "repository": "https://github.com/ryanhs/ultravoucher-js",
   "author": "ryanhs <mr.ryansilalahi@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "lint": "./node_modules/eslint/bin/eslint.js . --fix --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
+    "test": "NODE_ENV=development node --trace-warnings node_modules/.bin/jest --passWithNoTests --coverage --runInBand",
+    "start": "yarn test --watch"
+  },
+  "dependencies": {
+    "cache-manager": "^3.2.1",
+    "superagent": "^5.2.2"
+  },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "eslint": "^6.7.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jest": "^23.0.3",
     "jest": "^24.9.0",
-    "nodemon": "^1.19.4"
+    "jest-json-schema": "^2.1.0",
+    "moment": "^2.24.0",
+    "nodemon": "^1.19.4",
+    "noop-logger": "^0.1.1"
   },
   "jest": {
     "testEnvironment": "node",

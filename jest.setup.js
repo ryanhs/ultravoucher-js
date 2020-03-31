@@ -1,5 +1,8 @@
-// fake timer
-// jest.useFakeTimers();
+const path = require('path');
+const { matchers: jsonSchemaMatchers } = require('jest-json-schema');
 
-// timeout 20s
-// jest.setTimeout(20000);
+expect.extend(jsonSchemaMatchers);
+require('dotenv')
+  .config({
+    path: path.resolve(process.cwd(), 'jest.env'),
+  });

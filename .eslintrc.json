@@ -20,6 +20,7 @@
       "no-trailing-spaces": "off",
       "global-require": "off",
       "padded-blocks": "off",
+      "camelcase": "off",
       "no-unused-vars": "warn",
       "no-param-reassign": ["error", { "props": false }],
       "radix": "warn"
