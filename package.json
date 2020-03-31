@@ -1,5 +1,5 @@
 {
-  "name": "ultravoucher-js",
+  "name": "ultravoucher",
   "version": "1.0.0",
   "description": "ultravoucher js client ",
   "main": "lib/index.js",
