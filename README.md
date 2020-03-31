@@ -22,6 +22,67 @@ const client = new Client({
 });
 ```
 
+#### Custom logger
+
+default logger use `console`.. will use: `console.trace`, `console.error`, `console.info`.  
+Example use `noop-logger`:
+
+```javascript
+const noop = require('noop-logger');
+noop.trace = noop.debug;
+
+const client = new Client({
+  appId: process.env.ULTRAVOUCHER_CLIENT_APP_ID,
+  appKey: process.env.ULTRAVOUCHER_CLIENT_APP_KEY,
+  apiBaseUrl: process.env.ULTRAVOUCHER_CLIENT_APP_BASEURL,
+  logger: noop,
+});
+```
+
+> actually you better provide logger to use something like `bunyan`. as it already use `log.child({ commonInfo })` if exists.
+
+
+#### Custom http client (superagent api like)
+
+this library use `superagent`. But you can use your own modified superagent. *zipkin perhaps?*
+
+Example:
+
+```javascript
+const superagent = require('superagent');
+
+const customAgent = superagent
+  .agent()
+  .use(somePlugin());
+
+const client = new Client({
+  appId: process.env.ULTRAVOUCHER_CLIENT_APP_ID,
+  appKey: process.env.ULTRAVOUCHER_CLIENT_APP_KEY,
+  apiBaseUrl: process.env.ULTRAVOUCHER_CLIENT_APP_BASEURL,
+  agent: customAgent,
+});
+```
+
+#### Custom cacher
+
+this library use `cache-manager` with memory driver. for now, its only for cache token. But you can use your own modified cache-manager. *redis driver perhaps? to be used in scaled out servers.*
+
+Example:
+
+```javascript
+const cacheManager = require('cache-manager');
+
+const customCacher = cacheManager.caching({ store: 'memory', max: 5 });
+
+const client = new Client({
+  appId: process.env.ULTRAVOUCHER_CLIENT_APP_ID,
+  appKey: process.env.ULTRAVOUCHER_CLIENT_APP_KEY,
+  apiBaseUrl: process.env.ULTRAVOUCHER_CLIENT_APP_BASEURL,
+  cacher: customCacher,
+});
+```
+
+
 ## Examples
 
 #### Get Balance
