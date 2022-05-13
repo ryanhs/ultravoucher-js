@@ -5,9 +5,80 @@ const { Client } = require('../lib/index');
 noop.trace = noop.debug;
 
 // to not waste any order tested
-let singletonOrder;
+
+describe('order error', () => {
+  let singletonOrder;
+
+  it('can open order error not found ', async () => {
+    const client = new Client({
+      appId: process.env.ULTRAVOUCHER_CLIENT_APP_ID,
+      appKey: process.env.ULTRAVOUCHER_CLIENT_APP_KEY,
+      apiBaseUrl: process.env.ULTRAVOUCHER_CLIENT_APP_BASEURL,
+      logger: noop,
+    });
+
+    const balance = await client.getBalance();
+    // console.log('balance', { balance })
+
+    const milliseconds = new Date().valueOf();
+
+    const products = await client.getProductList();
+    const product = products[0];
+    // console.log('try to buy', product.sku, product.sku_name)
+
+    const request = client.openOrder({
+      milliseconds,
+      request_id: milliseconds,
+      order_number: milliseconds,
+      sku: product.sku + 'not-found',
+      qty: '1',
+      receiver_name: 'jhon doe',
+      receiver_email: 'jhon@email.com',
+      receiver_phone: '0871282373744',
+    });
+
+    await expect(request).rejects.toThrow();
+
+    // await request.catch(console.error)
+  });
+
+  it('can open order error  qty', async () => {
+    const client = new Client({
+      appId: process.env.ULTRAVOUCHER_CLIENT_APP_ID,
+      appKey: process.env.ULTRAVOUCHER_CLIENT_APP_KEY,
+      apiBaseUrl: process.env.ULTRAVOUCHER_CLIENT_APP_BASEURL,
+      logger: noop,
+    });
+
+    const balance = await client.getBalance();
+    // console.log('balance', { balance })
+
+    const milliseconds = new Date().valueOf();
+
+    const products = await client.getProductList();
+    const product = products[0];
+    // console.log('try to buy', product.sku, product.sku_name)
+
+    const request = client.openOrder({
+      milliseconds,
+      request_id: milliseconds,
+      order_number: '',
+      sku: product.sku,
+      qty: '1',
+      receiver_name: 'jhon doe',
+      receiver_email: 'jhon@email.com',
+      receiver_phone: '0871282373744',
+    });
+
+    await expect(request).rejects.toThrow();
+
+    // await request.catch(console.error)
+  });
+
+});
 
 describe('order', () => {
+  let singletonOrder;
 
   it('can open order', async () => {
     const client = new Client({
@@ -17,10 +88,14 @@ describe('order', () => {
       logger: noop,
     });
 
+    const balance = await client.getBalance();
+    // console.log('balance', { balance })
+
     const milliseconds = new Date().valueOf();
 
     const products = await client.getProductList();
-    const product = products[0];
+    const product = products[1];
+    // console.log('try to buy', product.sku, product.sku_name)
 
     const request = client.openOrder({
       milliseconds,
@@ -47,7 +122,6 @@ describe('order', () => {
     singletonOrder = await request;
     singletonOrder.milliseconds = milliseconds;
   });
-
 
   it('can check order data', async () => {
     const client = new Client({
@@ -113,7 +187,7 @@ describe('order', () => {
     });
 
     const milliseconds = new Date().valueOf();
-    
+
     const request = client.getHistoryOrder({
       milliseconds,
       request_id: milliseconds,
