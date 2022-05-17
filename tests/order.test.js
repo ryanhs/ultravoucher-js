@@ -30,7 +30,7 @@ describe('order error', () => {
       milliseconds,
       request_id: milliseconds,
       order_number: milliseconds,
-      sku: product.sku + 'not-found',
+      sku: `${product.sku}not-found`,
       qty: '1',
       receiver_name: 'jhon doe',
       receiver_email: 'jhon@email.com',
@@ -210,5 +210,42 @@ describe('order', () => {
     });
   });
 
+
+});
+
+describe('fix bug 2022-05-17', () => {
+  let singletonOrder;
+
+  it('open order test UVCRK80 error!', async () => {
+    const client = new Client({
+      appId: process.env.ULTRAVOUCHER_CLIENT_APP_ID,
+      appKey: process.env.ULTRAVOUCHER_CLIENT_APP_KEY,
+      apiBaseUrl: process.env.ULTRAVOUCHER_CLIENT_APP_BASEURL,
+      logger: noop,
+    });
+
+    // const balance = await client.getBalance();
+    // console.log('balance', { balance })
+
+    const milliseconds = new Date().valueOf();
+
+    // const products = await client.getProductList();
+    // console.log(products.map(v => [v.sku, v.sku_name]))
+    // const product = products[1];
+    // console.log('try to buy', product.sku, product.sku_name)
+
+    const request = client.openOrder({
+      milliseconds,
+      request_id: milliseconds,
+      order_number: milliseconds,
+      sku: 'UVCRK80',
+      qty: '1',
+      receiver_name: 'jhon doe',
+      receiver_email: 'jhon@email.com',
+      receiver_phone: '0871282373744',
+    });
+
+    await expect(request).rejects.toThrow('out of stock');
+  });
 
 });
